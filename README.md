@@ -152,3 +152,8 @@ or
 ```vim
 lua require('telescope').extensions.butler.buffers()
 ```
+
+## Contributing
+
+If you have any ideas how the plugin could be improved or extended, please open
+an issue so we can discuss them. Contributions are welcome!
