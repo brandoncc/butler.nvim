@@ -137,3 +137,18 @@ end)
 
 This configuration has the effect of starting servers the first time you enter a
 worktree, and restarting them as you move into other worktrees.
+
+### Telescope integration
+
+A telescope extension is included which allows you to quickly jump to the
+buffers that butler is managing. To use it:
+
+```vim
+:Telescope butler buffers
+```
+
+or
+
+```vim
+lua require('telescope').extensions.butler.buffers()
+```
