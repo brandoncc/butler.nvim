@@ -22,7 +22,36 @@ Plug 'brandoncc/processes.nvim'
 Plug 'brandoncc/butler.nvim'
 ```
 
-## Configuration
+## Plugin configuration
+
+### Defaults
+
+The plugin has the following default configuration:
+
+```lua
+local config = {
+  -- Signals to send to the process to kill it, starting on the left.
+  kill_signals = { 'TERM', 'KILL' },
+
+  -- Each signal is given the kill_timeout length of time in seconds to exit
+  -- before trying the next signal.
+  kill_timeout = 1,
+
+  -- If you would like to see messages such as "Killing process 123 with signal
+  -- TERM", enable this.
+  log_kill_signals = false,
+}
+```
+
+### Customization
+
+You can customize the plugin with the `setup()` function:
+
+```lua
+lua require("butler").setup({ kill_timeout = 0.5 })
+```
+
+## Configuration file
 
 Butler is configured using a json file that is located at
 `$HOME/.config/butler.nvim/config.json` (pull requests to improve flexibility are welcome).
@@ -105,7 +134,10 @@ lua require("butler").start()
 
 ### Stopping project servers
 
-Stopping servers kills their processes and then deletes their buffers.
+Stopping servers kills their processes and then deletes their buffers. The
+processes are stopped using the kill signals provided in the configuration. The
+signals are each tried until the process is successfully killed or there are no
+more signals to try.
 
 ```vim
 lua require("butler").stop()

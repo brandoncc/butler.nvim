@@ -17,7 +17,26 @@ local data_directory = vim.fn.expand("$HOME/.config/butler.nvim")
 local data_file_name = "config.json"
 local data_file_path = data_directory .. "/" .. data_file_name
 
+local _config = {
+  -- Signals to send to the process to kill it, starting on the left.
+  kill_signals = { 'TERM', 'KILL' },
+
+  -- Each signal is given the kill_timeout length of time in seconds to exit
+  -- before trying the next signal.
+  kill_timeout = 1,
+
+  -- If you would like to see messages such as "Killing process 123 with signal
+  -- TERM", enable this.
+  log_kill_signals = false,
+}
+
 M = {}
+
+local function setup(opts)
+  for k, v in pairs(opts) do
+    _config[k] = v
+  end
+end
 
 local function get_project_commands()
   local config = vim.fn.readfile(data_file_path)
@@ -85,7 +104,11 @@ local function kill_process_tree(buffer)
   local ok, buffer_pid = pcall(vim.api.nvim_buf_get_var, buffer, 'terminal_job_pid')
 
   if ok and buffer_pid then
-    processes.kill_tree(buffer_pid, 1)
+    processes.kill_tree(buffer_pid, {
+      signals = _config.kill_signals,
+      timeout = _config.kill_timeout,
+      log_signals = _config.log_kill_signals,
+    })
   end
 end
 
@@ -117,6 +140,7 @@ end
 
 M.buffers = butler_buffers
 M.restart = restart_servers
+M.setup = setup
 M.start = start_servers
 M.stop = stop_servers
 
