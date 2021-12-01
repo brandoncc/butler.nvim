@@ -87,18 +87,18 @@ local function restart_servers()
   start_servers()
 end
 
-local function choose_buffer()
+local function choose_process()
   if _config.interface.butler_buffers then
-    return _config.interface.choose_buffer()
+    return _config.interface.choose_process()
   else
-    vim.api.nvim_err_writeln("choose_buffer not implemented for this interface")
+    vim.api.nvim_err_writeln("choose_process not implemented for this interface")
   end
 end
 
 -- Set native interface as the default
 setup({ interface = 'native' })
 
-M.buffers = choose_buffer
+M.processes = choose_process
 M.restart = restart_servers
 M.setup = setup
 M.start = start_servers

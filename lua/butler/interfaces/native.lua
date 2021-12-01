@@ -25,7 +25,7 @@ local function butler_buffers()
   return buffers
 end
 
-local function choose_buffer()
+local function choose_process()
   if telescope_picker_loaded then
     return telescope_picker.picker(butler_buffers())
   else
@@ -99,6 +99,6 @@ M.stop_servers = function()
 end
 
 M.butler_buffers = butler_buffers
-M.choose_buffer = choose_buffer
+M.choose_process = choose_process
 
 return M

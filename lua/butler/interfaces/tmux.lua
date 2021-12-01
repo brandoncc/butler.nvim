@@ -124,7 +124,7 @@ M.stop_servers = function()
   _active_pane_ids = {}
 end
 
-local function choose_buffer()
+local function choose_process()
   if #_active_pane_ids == 0 then
     print("No butler panes found")
     return
@@ -145,6 +145,6 @@ local function choose_buffer()
   vim.fn.system("tmux choose-tree -Nwf'" .. tmux_filter .. "'")
 end
 
-M.choose_buffer = choose_buffer
+M.choose_process = choose_process
 
 return M
