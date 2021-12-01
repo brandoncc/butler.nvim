@@ -210,7 +210,8 @@ lua require("butler").setup({ interface = 'your-interface' })
 
 ### Required API
 
-Interfaces must return a table with the following structure:
+Interfaces must return a table which has `:new(fn)` defined on it, with the
+following structure:
 
 ```lua
 {
@@ -222,6 +223,9 @@ Interfaces must return a table with the following structure:
 `start_servers()` will be called with the commands from your json config that
 match the current working directory. The list will contain the full command
 table for each, not just the `command.cmd` strings.
+
+The function that gets passed to `:new()` returns a copy of the butler config
+when called.
 
 ### Optional API
 
