@@ -9,7 +9,7 @@ local telescope_picker_loaded, telescope_picker = pcall(require, 'butler.telesco
 
 local _get_config
 
-M = {}
+local M = {}
 
 local function butler_buffers()
   local buffers = {}

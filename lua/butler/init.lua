@@ -31,7 +31,7 @@ _config = {
   log_kill_signals = false,
 }
 
-M = {}
+local M = {}
 
 local function use_interface(interface)
   if interface == 'tmux' and vim.fn.system('printenv TMUX') == '' then

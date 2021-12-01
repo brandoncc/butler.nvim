@@ -9,7 +9,7 @@ local finders = require('telescope.finders')
 local action_state = require('telescope.actions.state')
 local actions = require("telescope.actions")
 
-M = {}
+local M = {}
 
 local function picker(butler_buffers, opts)
   local buffers = {}
