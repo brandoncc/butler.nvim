@@ -88,7 +88,7 @@ local function restart_servers()
 end
 
 local function choose_process()
-  if _config.interface.butler_buffers then
+  if _config.interface.choose_process then
     return _config.interface.choose_process()
   else
     vim.api.nvim_err_writeln("choose_process not implemented for this interface")
