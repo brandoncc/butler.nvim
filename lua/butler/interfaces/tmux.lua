@@ -54,7 +54,14 @@ local function table_diff(t1, t2)
 end
 
 local function get_pids()
-  return string_lines(vim.fn.system("tmux list-panes -sF '#{pane_pid}'"))
+  local string_pids = string_lines(vim.fn.system("tmux list-panes -sF '#{pane_pid}'"))
+  local pids = {}
+
+  for _, pid in pairs(string_pids) do
+    table.insert(pids, tonumber(pid))
+  end
+
+  return pids
 end
 
 local function get_pane_ids()
