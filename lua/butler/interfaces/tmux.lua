@@ -75,7 +75,7 @@ end
 
 local function create_window(command)
   local new_window_id = get_new_window_id_after(function()
-    vim.fn.system("tmux neww -d")
+    vim.fn.system("tmux neww -d -c \"" .. vim.fn.getcwd() .. "\"")
   end)
 
   vim.fn.system("tmux send-keys -t " .. new_window_id .. " " .. command.cmd .. " Enter")
