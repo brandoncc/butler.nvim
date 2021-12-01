@@ -233,6 +233,11 @@ If you would like your interface to offer a way to jump to processes that butler
 is managing, you can also export a function on your interface table called
 `choose_process()`. This function is called by `require("butler").processes()`.
 
+### Minimal example
+
+A minimal interface example is available
+[here](lua/butler/interfaces/minimal-example.lua).
+
 ## Contributing
 
 If you have any ideas how the plugin could be improved or extended, please open
