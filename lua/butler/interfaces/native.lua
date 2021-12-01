@@ -98,7 +98,6 @@ M.stop_servers = function()
   end
 end
 
-M.butler_buffers = butler_buffers
 M.choose_process = choose_process
 
 return M
