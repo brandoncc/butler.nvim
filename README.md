@@ -40,6 +40,9 @@ local config = {
   -- If you would like to see messages such as "Killing process 123 with signal
   -- TERM", enable this.
   log_kill_signals = false,
+
+  -- Butler currently supports tmux and native neovim terminals.
+  interface = 'native'
 }
 ```
 
@@ -170,20 +173,61 @@ end)
 This configuration has the effect of starting servers the first time you enter a
 worktree, and restarting them as you move into other worktrees.
 
-### Telescope integration
+### Jumping to processes
 
-A telescope extension is included which allows you to quickly jump to the
-buffers that butler is managing. To use it:
-
-```vim
-:Telescope butler buffers
-```
-
-or
+Each interface provides its own way to jump to processes, which can be accessed
+with:
 
 ```vim
-lua require('telescope').extensions.butler.buffers()
+lua require("butler").processes()
 ```
+
+#### Native interface
+
+When using the native interface, a telescope picker is provided to assist in
+jumping between processes. If telescope is not installed, the `processes()`
+function simply say that.
+
+#### tmux interface
+
+When using the tmux interface, the tmux `choose-tree` command is used to assist
+in choosing a process. The interface is filtered so that only butler-managed
+tmux panes are shown.
+
+## Interfaces
+
+Butler can be easily extended by adding more interfaces. At this time, there are
+two interfaces: 'native' and 'tmux'.
+
+### Directory structure
+
+The main interface file should be located at
+`lua/butler/interfaces/your-interface.lua`. For this file name, you would use:
+
+```vim
+lua require("butler").setup({ interface = 'your-interface' })
+```
+
+### Required API
+
+Interfaces must return a table with the following structure:
+
+```lua
+{
+  start_servers: function(commands),
+  stop_servers: function(),
+}
+```
+
+`start_servers()` will be called with the commands from your json config that
+match the current working directory. The list will contain the full command
+table for each, not just the `command.cmd` strings.
+
+### Optional API
+
+If you would like your interface to offer a way to jump to processes that butler
+is managing, you can also export a function on your interface table called
+`choose_process()`. This function is called by `require("butler").processes()`.
 
 ## Contributing
 

@@ -1,5 +1,7 @@
+-- I do not want users to invoke the picker through telescope, so I am putting
+-- it in a module instead of a Telescope extension.
+
 local vim = vim
-local butler = require('butler')
 
 local pickers = require('telescope.pickers')
 local sorters = require('telescope.sorters')
@@ -7,10 +9,12 @@ local finders = require('telescope.finders')
 local action_state = require('telescope.actions.state')
 local actions = require("telescope.actions")
 
-return function (opts)
+M = {}
+
+local function picker(butler_buffers, opts)
   local buffers = {}
 
-  for _, buffer in ipairs(butler.buffers()) do
+  for _, buffer in ipairs(butler_buffers) do
     local command = vim.api.nvim_buf_get_var(buffer, 'term_title')
 
     table.insert(buffers, {
@@ -40,7 +44,6 @@ return function (opts)
   local function handle_complete(prompt_bufnr)
     local entry = action_state.get_selected_entry()
 
-    print("Switching to " .. entry.display .. " (buffer " .. entry.value.bufnr .. ")")
     actions.close(prompt_bufnr)
     vim.cmd("b" .. entry.value.bufnr)
   end
@@ -58,3 +61,6 @@ return function (opts)
   }):find()
 end
 
+M.picker = picker
+
+return M
