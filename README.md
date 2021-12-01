@@ -202,7 +202,7 @@ two interfaces: 'native' and 'tmux'.
 ### Directory structure
 
 The main interface file should be located at
-`lua/butler/interfaces/your-interface.lua`. For this filename, you would use:
+`lua/butler/interfaces/your-interface.lua`. For this file name, you would use:
 
 ```vim
 lua require("butler").setup({ interface = 'your-interface' })
