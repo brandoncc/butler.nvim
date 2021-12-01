@@ -78,7 +78,8 @@ local function create_window(command)
     vim.fn.system("tmux neww -d -c \"" .. vim.fn.getcwd() .. "\"")
   end)
 
-  vim.fn.system("tmux send-keys -t " .. new_window_id .. " " .. command.cmd .. " Enter")
+  local escaped_cmd = command.cmd:gsub('"', '\\"')
+  vim.fn.system("tmux send-keys -t " .. new_window_id .. " \"" .. escaped_cmd .. "\" Enter")
 end
 
 local function kill_process_tree(buffer)
