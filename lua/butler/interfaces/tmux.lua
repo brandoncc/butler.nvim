@@ -87,10 +87,11 @@ local function create_window(command)
 
   local escaped_cmd = command.cmd:gsub('"', '\\"')
   vim.fn.system("tmux send-keys -t " .. new_window_id .. " \"" .. escaped_cmd .. "\" Enter")
-end
 
-local function kill_process_tree(buffer)
-  local ok, buffer_pid = pcall(vim.api.nvim_buf_get_var, buffer, 'terminal_job_pid')
+  if command.name then
+    vim.fn.system("tmux rename-window -t " .. new_window_id .. " \"" .. command.name .. "\"")
+  end
+end
 
   if ok and buffer_pid then
     local config = _get_config()
