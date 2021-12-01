@@ -41,8 +41,7 @@ local config = {
   -- TERM", enable this.
   log_kill_signals = false,
 
-  -- Butler currently supports tmux and native neovim terminals. When using
-  -- native, telescope is used as the buffer picker if it is available.
+  -- Butler currently supports tmux and native neovim terminals.
   interface = 'native'
 }
 ```
