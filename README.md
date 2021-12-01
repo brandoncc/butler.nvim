@@ -40,6 +40,10 @@ local config = {
   -- If you would like to see messages such as "Killing process 123 with signal
   -- TERM", enable this.
   log_kill_signals = false,
+
+  -- Butler currently supports tmux and native neovim terminals. When using
+  -- native, telescope is used as the buffer picker if it is available.
+  interface = 'native'
 }
 ```
 
@@ -170,20 +174,26 @@ end)
 This configuration has the effect of starting servers the first time you enter a
 worktree, and restarting them as you move into other worktrees.
 
-### Telescope integration
+### Jumping to processes
 
-A telescope extension is included which allows you to quickly jump to the
-buffers that butler is managing. To use it:
-
-```vim
-:Telescope butler buffers
-```
-
-or
+Each interface provides its own way to jump to processes, which can be accessed
+with:
 
 ```vim
-lua require('telescope').extensions.butler.buffers()
+lua require("butler").processes()
 ```
+
+#### Native interface
+
+When using the native interface, a telescope picker is provided to assist in
+jumping between processes. If telescope is not installed, the `processes()`
+function simply say that.
+
+#### tmux interface
+
+When using the tmux interface, the tmux `choose-tree` command is used to assist
+in choosing a process. The interface is filtered so that only butler-managed
+tmux panes are shown.
 
 ## Contributing
 
