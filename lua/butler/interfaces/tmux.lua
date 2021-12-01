@@ -93,15 +93,14 @@ local function create_window(command)
   end
 end
 
-  if ok and buffer_pid then
-    local config = _get_config()
+local function kill_process_tree(pid)
+  local config = _get_config()
 
-    processes.kill_tree(buffer_pid, {
-      signals = config.kill_signals,
-      timeout = config.kill_timeout,
-      log_signals = config.log_kill_signals,
-    })
-  end
+  processes.kill_tree(pid, {
+    signals = config.kill_signals,
+    timeout = config.kill_timeout,
+    log_signals = config.log_kill_signals,
+  })
 end
 
 local function start_servers(commands)
@@ -123,10 +122,6 @@ end
 M.stop_servers = function()
   for _, pid in ipairs(_active_pids) do
     kill_process_tree(pid)
-  end
-
-  for _, pane_id in ipairs(_active_pane_ids) do
-    vim.fn.system("tmux kill-pane -t " .. pane_id)
   end
 
   _active_pids = {}
