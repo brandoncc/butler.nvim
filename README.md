@@ -194,6 +194,41 @@ When using the tmux interface, the tmux `choose-tree` command is used to assist
 in choosing a process. The interface is filtered so that only butler-managed
 tmux panes are shown.
 
+## Interfaces
+
+Butler can be easily extended by adding more interfaces. At this time, there are
+two interfaces: 'native' and 'tmux'.
+
+### Directory structure
+
+The main interface file should be located at
+`lua/butler/interfaces/your-interface.lua`. For this filename, you would use:
+
+```vim
+lua require("butler").setup({ interface = 'your-interface' })
+```
+
+### Required API
+
+Interfaces must return a table with the following structure:
+
+```lua
+{
+  start_servers: function(commands),
+  stop_servers: function(),
+}
+```
+
+`start_servers()` will be called with the commands from your json config that
+match the current working directory. The list will contain the full command
+table for each, not just the `command.cmd` strings.
+
+### Optional API
+
+If you would like your interface to offer a way to jump to processes that butler
+is managing, you can also export a function on your interface table called
+`choose_process()`. This function is called by `require("butler").processes()`.
+
 ## Contributing
 
 If you have any ideas how the plugin could be improved or extended, please open
