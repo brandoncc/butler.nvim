@@ -150,6 +150,14 @@ local function choose_process()
   vim.fn.system("tmux choose-tree -Nwf'" .. tmux_filter .. "'")
 end
 
+M.is_available = function()
+  if vim.fn.system('printenv TMUX') == '' then
+    return false, "Neovim is not running within a tmux session"
+  end
+
+  return true
+end
+
 M.choose_process = choose_process
 
 return M

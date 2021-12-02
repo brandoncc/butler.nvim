@@ -217,15 +217,40 @@ following structure:
 {
   start_servers: function(commands),
   stop_servers: function(),
+  is_available: function(),
 }
 ```
+
+#### `start_servers`
 
 `start_servers()` will be called with the commands from your json config that
 match the current working directory. The list will contain the full command
 table for each, not just the `command.cmd` strings.
 
-The function that gets passed to `:new()` returns a copy of the butler config
-when called.
+#### `stop_servers`
+
+`stop_servers()` should stop any processes that the interface started, and do
+any necessary cleanup.
+
+#### `is_available`
+
+`is_available()` should return a boolean that lets butler know if the interface
+can be used. For example, the tmux interface is not available if neovim is not
+running within a tmux session.
+
+The function can optionally return a second value which is a string containing
+a message that will be displayed to the user when the interface is unavailable.
+If provided, it is displayed to the user as "[your message], butler is falling
+back to native".
+
+If no message is provided, the default message to the user is "[interface name]
+is not available, butler is falling back to native".
+
+#### `:new`
+
+When the function that gets passed to `:new()` is called, it returns a copy of
+the latest butler config. This config contains any values set with
+`require("butler").setup()`, regardless of when `setup()` was called.
 
 ### Optional API
 

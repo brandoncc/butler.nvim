@@ -34,12 +34,18 @@ _config = {
 local M = {}
 
 local function use_interface(interface)
-  if interface == 'tmux' and vim.fn.system('printenv TMUX') == '' then
-    print("Tmux is not running, butler is falling back to native interface")
-    interface = 'native'
+  local hopeful_interface = require('butler.interfaces.' .. interface)
+  local interface_is_available, message = hopeful_interface.is_available()
+
+  if interface_is_available then
+    _config.interface = hopeful_interface:new(get_config)
+    return
   end
 
-  _config.interface = require('butler.interfaces.' .. interface):new(get_config)
+  message = (message or interface .. ' is not available') .. ', butler is falling back to native'
+
+  print(message)
+  _config.interface = require('butler.interfaces.native'):new(get_config)
 end
 
 local function setup(opts)

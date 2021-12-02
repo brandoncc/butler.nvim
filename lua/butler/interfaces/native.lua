@@ -98,6 +98,10 @@ M.stop_servers = function()
   end
 end
 
+M.is_available = function()
+  return true
+end
+
 M.choose_process = choose_process
 
 return M

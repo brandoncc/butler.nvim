@@ -38,4 +38,12 @@ function M.choose_process()
   print("minimal-example:choose_process called")
 end
 
+-- is_available returns a boolean indicating whether the interface is available,
+-- which tells butler whether or not to use this interface. A second return
+-- value can be provided, which is a string that describes why the interface
+-- is unavailable.
+function M.is_available()
+  return false, "minimal-example interface is not implemented"
+end
+
 return M
