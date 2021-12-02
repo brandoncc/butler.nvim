@@ -33,16 +33,21 @@ _config = {
 
 local M = {}
 
-local function use_interface(interface)
-  local hopeful_interface = require('butler.interfaces.' .. interface)
-  local interface_is_available, message = hopeful_interface.is_available()
+local function use_interface(new_interface)
+  local exists, interface = pcall(require, 'butler.interfaces.' .. new_interface)
+  local available
+  local message
 
-  if interface_is_available then
-    _config.interface = hopeful_interface:new(get_config)
-    return
+  if exists then
+    available, message = interface.is_available()
+
+    if available then
+      _config.interface = interface:new(get_config)
+      return
+    end
   end
 
-  message = (message or interface .. ' is not available') .. ', butler is falling back to native'
+  message = (message or new_interface .. ' is not available') .. ', butler is falling back to native'
 
   print(message)
   _config.interface = require('butler.interfaces.native'):new(get_config)
@@ -59,12 +64,20 @@ local function setup(opts)
 end
 
 local function get_project_commands()
-  local config = vim.fn.readfile(data_file_path)
-  if config == "" then
+  local read_okay, config = pcall(vim.fn.readfile, data_file_path)
+
+  if not read_okay then
+    print("Butler could not read config file at " .. data_file_path)
     return {}
   end
 
-  local config_json = json_decode(config)
+  local decode_okay, config_json = pcall(json_decode, config)
+
+  if not decode_okay then
+    print("Error reading json content from butler config file")
+    return {}
+  end
+
   local configurations_matching_current_directory_tree = {}
 
   for key, value in pairs(config_json) do
@@ -81,11 +94,29 @@ local function get_project_commands()
 end
 
 local function start_servers ()
-  _config.interface.start_servers(get_project_commands())
+  if not _config.interface then
+    print("Butler doesn't have an active interface, use setup() to set one")
+    return
+  end
+
+  local success, err = pcall(_config.interface.start_servers, get_project_commands())
+
+  if not success then
+    print('Butler failed to start servers, ' .. err)
+  end
 end
 
 local function stop_servers ()
-  _config.interface.stop_servers()
+  if not _config.interface then
+    print("Butler doesn't have an active interface, use setup() to set one")
+    return
+  end
+
+  local success, err = pcall(_config.interface.stop_servers, get_project_commands())
+
+  if not success then
+    print('Butler failed to stop servers, ' .. err)
+  end
 end
 
 local function restart_servers()
@@ -94,8 +125,17 @@ local function restart_servers()
 end
 
 local function choose_process()
+  if not _config.interface then
+    print("Butler doesn't have an active interface, use setup() to set one")
+    return
+  end
+
   if _config.interface.choose_process then
-    return _config.interface.choose_process()
+    local success, err = pcall(_config.interface.choose_process)
+
+    if not success then
+      print('Butler failed to execute choose_process, ' .. err)
+    end
   else
     vim.api.nvim_err_writeln("choose_process not implemented for this interface")
   end
