@@ -11,6 +11,7 @@ if not native_interface_loaded then
   error("Could not load native interface module, " .. native_interface)
 end
 
+local M = {}
 local _get_config
 local _active_pids = {}
 local _active_pane_ids = {}
