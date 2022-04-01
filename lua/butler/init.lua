@@ -67,14 +67,14 @@ local function get_project_commands()
   local read_okay, config = pcall(vim.fn.readfile, data_file_path)
 
   if not read_okay then
-    print("Butler could not read config file at " .. data_file_path)
+    print("Butler could not read config file at " .. data_file_path .. ", using defaults")
     return {}
   end
 
   local decode_okay, config_json = pcall(json_decode, config)
 
   if not decode_okay then
-    print("Error reading json content from butler config file")
+    print("Error reading json content from butler config file, using defaults")
     return {}
   end
 
